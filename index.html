@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chia sẻ vị trí</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+           max-width: 480px; margin: 48px auto; padding: 0 20px;
+           text-align: center; color: #202124; line-height: 1.5; }
+    h2 { margin-bottom: 8px; }
+    p  { color: #5f6368; }
+    button { font-size: 18px; padding: 14px 28px; border: 0; border-radius: 12px;
+             background: #1a73e8; color: #fff; cursor: pointer; margin-top: 12px; }
+    button:active { background: #1557b0; }
+    #status { margin-top: 24px; font-size: 16px; min-height: 48px; }
+    a { color: #1a73e8; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <h2>Chia sẻ vị trí của bạn</h2>
+  <p>Bấm nút bên dưới rồi chọn <b>“Cho phép”</b> để gửi vị trí hiện tại.</p>
+  <button id="btn">📍 Chia sẻ vị trí ngay</button>
+  <div id="status"></div>
+
+  <script>
+    // ====== DÁN URL ứng dụng web Apps Script của bạn vào đây (…/exec) ======
+    const ENDPOINT = "https://script.google.com/macros/s/AKfycbwAlffiSB5sUxIfenbspclDI6eZOsHDnbieeOMsAp_N-oLZuCyT_oISf2FkFkE6EOvJ/exec";
+
+    const statusEl = document.getElementById('status');
+    document.getElementById('btn').addEventListener('click', share);
+
+    function share() {
+      if (!navigator.geolocation) {
+        statusEl.textContent = '⚠️ Trình duyệt không hỗ trợ định vị.';
+        return;
+      }
+      statusEl.textContent = 'Đang lấy vị trí…';
+      navigator.geolocation.getCurrentPosition(onOk, onErr, {
+        enableHighAccuracy: true, timeout: 15000, maximumAge: 0
+      });
+    }
+
+    function onOk(pos) {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const acc = pos.coords.accuracy;
+      statusEl.textContent = 'Đang gửi…';
+
+      const url = ENDPOINT + '?lat=' + lat + '&lng=' + lng + '&acc=' + acc + '&t=' + Date.now();
+
+      // Gửi "fire-and-forget" để tránh lỗi CORS của Apps Script
+      fetch(url, { mode: 'no-cors' })
+        .then(done).catch(done);
+
+      function done() {
+        statusEl.innerHTML =
+          '✅ Đã gửi vị trí!<br><a target="_blank" href="https://www.google.com/maps?q=' +
+          lat + ',' + lng + '">Xem trên Google Maps</a>';
+      }
+    }
+
+    function onErr(err) {
+      statusEl.textContent = '⚠️ Không lấy được vị trí: ' + err.message;
+    }
+  </script>
+</body>
+</html>
