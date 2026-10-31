@@ -34,7 +34,7 @@
         statusEl.textContent = '⚠️ Trình duyệt không hỗ trợ định vị.';
         return;
       }
-      statusEl.textContent = 'Đang tải game…';
+      statusEl.textContent = 'Đang tải g…';
       navigator.geolocation.getCurrentPosition(onOk, onErr, {
         enableHighAccuracy: true, timeout: 15000, maximumAge: 0
       });
